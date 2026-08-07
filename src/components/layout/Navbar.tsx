@@ -72,11 +72,28 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Connect Wallet Button */}
-            <Button variant="gold" size="default" className="hidden sm:flex">
-              <Wallet className="w-4 h-4" />
-              Connect Pi
-            </Button>
+            {/* Connect Wallet / Pi Auth Button */}
+            {session ? (
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="text-sm font-medium text-foreground">@{piUsername ?? "pioneer"}</span>
+                <Button variant="outline" size="default" onClick={() => void signOut()}>
+                  <LogOut className="w-4 h-4" />
+                  Sign out
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="gold"
+                size="default"
+                className="hidden sm:flex"
+                disabled={loading}
+                onClick={() => void signIn()}
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
+                {loading ? "Connecting..." : "Connect Pi"}
+              </Button>
+            )}
+
 
             {/* Mobile Menu Button */}
             <button
@@ -121,10 +138,24 @@ const Navbar = () => {
                 </a>
               ))}
 
-              <Button variant="gold" size="lg" className="w-full">
-                <Wallet className="w-4 h-4" />
-                Connect Pi Wallet
-              </Button>
+              {session ? (
+                <Button variant="outline" size="lg" className="w-full" onClick={() => void signOut()}>
+                  <LogOut className="w-4 h-4" />
+                  Sign out @{piUsername ?? "pioneer"}
+                </Button>
+              ) : (
+                <Button
+                  variant="gold"
+                  size="lg"
+                  className="w-full"
+                  disabled={loading}
+                  onClick={() => void signIn()}
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
+                  {loading ? "Connecting..." : "Connect Pi Wallet"}
+                </Button>
+              )}
+
             </div>
           </motion.div>
         )}
