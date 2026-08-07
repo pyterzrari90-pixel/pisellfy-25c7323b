@@ -1,17 +1,40 @@
 // Pi Network SDK loader + init helper.
 // Docs: https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Authentication
+//       https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Payments
 
 export interface PiAuthResult {
   accessToken: string;
   user: { uid: string; username: string };
 }
 
+export interface PiPaymentDTO {
+  identifier: string;
+  amount: number;
+  memo: string;
+  metadata: Record<string, unknown>;
+  transaction?: { txid: string; verified: boolean } | null;
+}
+
+export interface PiPaymentData {
+  amount: number;
+  memo: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface PiPaymentCallbacks {
+  onReadyForServerApproval: (paymentId: string) => void;
+  onReadyForServerCompletion: (paymentId: string, txid: string) => void;
+  onCancel: (paymentId: string) => void;
+  onError: (error: Error, payment?: PiPaymentDTO) => void;
+}
+
 export interface PiSDK {
   init: (config: { version: string; sandbox?: boolean }) => Promise<void> | void;
   authenticate: (
     scopes: string[],
-    onIncompletePaymentFound: (payment: unknown) => void,
+    onIncompletePaymentFound: (payment: PiPaymentDTO) => void,
   ) => Promise<PiAuthResult>;
+  createPayment: (data: PiPaymentData, callbacks: PiPaymentCallbacks) => void;
 }
 
 declare global {
@@ -71,7 +94,7 @@ export function initPi(): Promise<PiSDK> {
     const sandbox =
       typeof window !== "undefined" &&
       (window.location.hostname === "localhost" || window.location.hostname.endsWith(".lovable.app"));
-    // Pi.init may return a Promise - await it fully before authenticating.
+    // Pi.init may return a Promise - await it fully before authenticating or paying.
     await Promise.resolve(Pi.init({ version: "2.0", sandbox }));
     return Pi;
   })();
@@ -79,9 +102,16 @@ export function initPi(): Promise<PiSDK> {
   return initPromise;
 }
 
+/** Completes a payment that was left in-flight from a previous session. */
+export async function handleIncompletePayment(payment: PiPaymentDTO) {
+  const { completeIncompletePayment } = await import("@/lib/piPayments");
+  await completeIncompletePayment(payment);
+}
+
 export async function authenticateWithPi(): Promise<PiAuthResult> {
   const Pi = await initPi();
-  return await Pi.authenticate(["username"], (payment) => {
-    console.warn("Incomplete Pi payment found", payment);
+  // "payments" scope is required for U2A payments via Pi.createPayment.
+  return await Pi.authenticate(["username", "payments"], (payment) => {
+    void handleIncompletePayment(payment);
   });
 }
