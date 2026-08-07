@@ -1,13 +1,17 @@
 import { motion } from "framer-motion";
-import { Heart, Star, ShoppingCart } from "lucide-react";
+import { Heart, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePiPayment } from "@/hooks/usePiPayment";
 
 const FeaturedProducts = () => {
+  const { buy, pendingProductId } = usePiPayment();
+
   const products = [
     {
       id: 1,
       title: "Premium UI Kit",
       creator: "DesignStudio",
+      amount: 25,
       price: "π 25",
       originalPrice: "π 50",
       rating: 4.9,
@@ -20,6 +24,7 @@ const FeaturedProducts = () => {
       id: 2,
       title: "React Dashboard Template",
       creator: "CodeMaster",
+      amount: 35,
       price: "π 35",
       originalPrice: null,
       rating: 4.8,
@@ -32,6 +37,7 @@ const FeaturedProducts = () => {
       id: 3,
       title: "Ambient Music Pack",
       creator: "SoundWave",
+      amount: 15,
       price: "π 15",
       originalPrice: "π 30",
       rating: 4.7,
@@ -44,6 +50,7 @@ const FeaturedProducts = () => {
       id: 4,
       title: "Crypto Trading Guide",
       creator: "TradePro",
+      amount: 45,
       price: "π 45",
       originalPrice: null,
       rating: 4.9,
@@ -56,6 +63,7 @@ const FeaturedProducts = () => {
       id: 5,
       title: "3D Icon Collection",
       creator: "IconArtist",
+      amount: 20,
       price: "π 20",
       originalPrice: null,
       rating: 4.6,
@@ -68,6 +76,7 @@ const FeaturedProducts = () => {
       id: 6,
       title: "Video Editing Course",
       creator: "FilmGuru",
+      amount: 60,
       price: "π 60",
       originalPrice: "π 100",
       rating: 4.8,
@@ -77,6 +86,7 @@ const FeaturedProducts = () => {
       featured: true,
     },
   ];
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
