@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ShoppingCart, Menu, X, Wallet } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, Wallet, Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePiAuth } from "@/hooks/usePiAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartCount] = useState(2);
+  const { session, piUsername, loading, signIn, signOut } = usePiAuth();
+
 
   const navLinks = [
     { name: "Marketplace", href: "#marketplace" },
