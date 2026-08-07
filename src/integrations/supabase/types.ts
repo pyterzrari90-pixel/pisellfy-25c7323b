@@ -38,6 +38,51 @@ export type Database = {
         }
         Relationships: []
       }
+      purchases: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          memo: string
+          metadata: Json
+          payment_id: string
+          product_id: string
+          product_title: string
+          status: string
+          txid: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          memo: string
+          metadata?: Json
+          payment_id: string
+          product_id: string
+          product_title: string
+          status?: string
+          txid?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          memo?: string
+          metadata?: Json
+          payment_id?: string
+          product_id?: string
+          product_title?: string
+          status?: string
+          txid?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
