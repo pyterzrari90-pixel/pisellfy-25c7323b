@@ -166,13 +166,28 @@ const FeaturedProducts = () => {
                   <Heart className="w-4 h-4 text-foreground" />
                 </button>
 
-                {/* Quick Add */}
+                {/* Buy with Pi */}
                 <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Button variant="gold" size="sm" className="w-full">
-                    <ShoppingCart className="w-4 h-4" />
-                    Add to Cart
+                  <Button
+                    variant="gold"
+                    size="sm"
+                    className="w-full"
+                    disabled={pendingProductId === String(product.id)}
+                    onClick={() =>
+                      void buy({ id: product.id, title: product.title, amount: product.amount })
+                    }
+                  >
+                    {pendingProductId === String(product.id) ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <span className="font-bold">π</span>
+                    )}
+                    {pendingProductId === String(product.id)
+                      ? "Processing..."
+                      : `Buy for ${product.price}`}
                   </Button>
                 </div>
+
               </div>
 
               {/* Content */}
