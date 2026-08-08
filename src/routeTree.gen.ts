@@ -26,6 +26,7 @@ import { Route as ServicesBecomeRouteImport } from './routes/services.become'
 import { Route as ServicesDashboardRouteImport } from './routes/services.dashboard'
 import { Route as ServicesNewRouteImport } from './routes/services.new'
 import { Route as ServicesOrdersRouteImport } from './routes/services.orders'
+import { Route as CoursesLearnIdRouteImport } from './routes/courses.learn.$id'
 import { Route as ApiPublicPaymentsApproveRouteImport } from './routes/api/public/payments.approve'
 import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/public/payments.complete'
 
@@ -114,6 +115,11 @@ const ServicesOrdersRoute = ServicesOrdersRouteImport.update({
   path: '/services/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesLearnIdRoute = CoursesLearnIdRouteImport.update({
+  id: '/courses/learn/$id',
+  path: '/courses/learn/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsApproveRoute =
   ApiPublicPaymentsApproveRouteImport.update({
     id: '/api/public/payments/approve',
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/services/orders': typeof ServicesOrdersRoute
   '/courses': typeof CoursesIndexRoute
   '/services': typeof ServicesIndexRoute
+  '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
   '/services/': typeof ServicesIndexRoute
+  '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/services/orders'
     | '/courses/'
     | '/services/'
+    | '/courses/learn/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesByTo: FileRoutesByTo
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/services/orders'
     | '/courses'
     | '/services'
+    | '/courses/learn/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   id:
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/services/orders'
     | '/courses/'
     | '/services/'
+    | '/courses/learn/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesById: FileRoutesById
@@ -275,6 +287,7 @@ export interface RootRouteChildren {
   ServicesOrdersRoute: typeof ServicesOrdersRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  CoursesLearnIdRoute: typeof CoursesLearnIdRoute
   ApiPublicPaymentsApproveRoute: typeof ApiPublicPaymentsApproveRoute
   ApiPublicPaymentsCompleteRoute: typeof ApiPublicPaymentsCompleteRoute
 }
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses/learn/$id': {
+      id: '/courses/learn/$id'
+      path: '/courses/learn/$id'
+      fullPath: '/courses/learn/$id'
+      preLoaderRoute: typeof CoursesLearnIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/approve': {
       id: '/api/public/payments/approve'
       path: '/api/public/payments/approve'
@@ -435,6 +455,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesOrdersRoute: ServicesOrdersRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  CoursesLearnIdRoute: CoursesLearnIdRoute,
   ApiPublicPaymentsApproveRoute: ApiPublicPaymentsApproveRoute,
   ApiPublicPaymentsCompleteRoute: ApiPublicPaymentsCompleteRoute,
 }
