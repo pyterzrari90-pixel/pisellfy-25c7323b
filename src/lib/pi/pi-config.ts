@@ -28,7 +28,8 @@ export const PI_CLIENT_ID_TESTNET =
 
 /** Mainnet oAuth Client ID (public value, safe in the client bundle). */
 export const PI_CLIENT_ID_MAINNET =
-  (import.meta.env['VITE_PI_CLIENT_ID_MAINNET'] as string | undefined) ?? "";
+  (import.meta.env['VITE_PI_CLIENT_ID_MAINNET'] as string | undefined) ??
+  "ScGmmvjKDYywIvAtSqX-XJcGskGotJm2tt22HP_S8Ss";
 
 /** Client ID actually used by the app, based on PI_ENVIRONMENT. */
 export const PI_CLIENT_ID =
