@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicPaymentsApproveRouteImport } from './routes/api/public/payments.approve'
+import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/public/payments.complete'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,31 +24,46 @@ const ApiPublicPaymentsApproveRoute =
     path: '/api/public/payments/approve',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsCompleteRoute =
+  ApiPublicPaymentsCompleteRouteImport.update({
+    id: '/api/public/payments/complete',
+    path: '/api/public/payments/complete',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
+  '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
+  '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
+  '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/payments/approve'
+  fullPaths:
+    '/' | '/api/public/payments/approve' | '/api/public/payments/complete'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/payments/approve'
-  id: '__root__' | '/' | '/api/public/payments/approve'
+  to: '/' | '/api/public/payments/approve' | '/api/public/payments/complete'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/payments/approve'
+    | '/api/public/payments/complete'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiPublicPaymentsApproveRoute: typeof ApiPublicPaymentsApproveRoute
+  ApiPublicPaymentsCompleteRoute: typeof ApiPublicPaymentsCompleteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,12 +82,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsApproveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/complete': {
+      id: '/api/public/payments/complete'
+      path: '/api/public/payments/complete'
+      fullPath: '/api/public/payments/complete'
+      preLoaderRoute: typeof ApiPublicPaymentsCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiPublicPaymentsApproveRoute: ApiPublicPaymentsApproveRoute,
+  ApiPublicPaymentsCompleteRoute: ApiPublicPaymentsCompleteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
