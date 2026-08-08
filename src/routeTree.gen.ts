@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as SellRouteImport } from './routes/sell'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiPublicPaymentsApproveRouteImport } from './routes/api/public/payments.approve'
 import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/public/payments.complete'
@@ -17,6 +20,21 @@ import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/publ
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellRoute = SellRouteImport.update({
+  id: '/sell',
+  path: '/sell',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -39,12 +57,18 @@ const ApiPublicPaymentsCompleteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/orders': typeof OrdersRoute
+  '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/orders': typeof OrdersRoute
+  '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
@@ -52,6 +76,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/orders': typeof OrdersRoute
+  '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
@@ -60,18 +87,27 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cart'
+    | '/orders'
+    | '/sell'
     | '/product/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cart'
+    | '/orders'
+    | '/sell'
     | '/product/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   id:
     | '__root__'
     | '/'
+    | '/cart'
+    | '/orders'
+    | '/sell'
     | '/product/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
@@ -79,6 +115,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CartRoute: typeof CartRoute
+  OrdersRoute: typeof OrdersRoute
+  SellRoute: typeof SellRoute
   ProductIdRoute: typeof ProductIdRoute
   ApiPublicPaymentsApproveRoute: typeof ApiPublicPaymentsApproveRoute
   ApiPublicPaymentsCompleteRoute: typeof ApiPublicPaymentsCompleteRoute
@@ -91,6 +130,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sell': {
+      id: '/sell'
+      path: '/sell'
+      fullPath: '/sell'
+      preLoaderRoute: typeof SellRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -119,6 +179,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CartRoute: CartRoute,
+  OrdersRoute: OrdersRoute,
+  SellRoute: SellRoute,
   ProductIdRoute: ProductIdRoute,
   ApiPublicPaymentsApproveRoute: ApiPublicPaymentsApproveRoute,
   ApiPublicPaymentsCompleteRoute: ApiPublicPaymentsCompleteRoute,
