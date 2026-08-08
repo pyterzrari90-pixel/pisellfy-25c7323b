@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiPublicPaymentsApproveRouteImport } from './routes/api/public/payments.approve'
 import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/public/payments.complete'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPaymentsApproveRoute =
@@ -33,35 +39,47 @@ const ApiPublicPaymentsCompleteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/api/public/payments/approve' | '/api/public/payments/complete'
+    | '/'
+    | '/product/$id'
+    | '/api/public/payments/approve'
+    | '/api/public/payments/complete'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/payments/approve' | '/api/public/payments/complete'
+  to:
+    | '/'
+    | '/product/$id'
+    | '/api/public/payments/approve'
+    | '/api/public/payments/complete'
   id:
     | '__root__'
     | '/'
+    | '/product/$id'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductIdRoute: typeof ProductIdRoute
   ApiPublicPaymentsApproveRoute: typeof ApiPublicPaymentsApproveRoute
   ApiPublicPaymentsCompleteRoute: typeof ApiPublicPaymentsCompleteRoute
 }
@@ -73,6 +91,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/payments/approve': {
@@ -94,6 +119,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductIdRoute: ProductIdRoute,
   ApiPublicPaymentsApproveRoute: ApiPublicPaymentsApproveRoute,
   ApiPublicPaymentsCompleteRoute: ApiPublicPaymentsCompleteRoute,
 }
