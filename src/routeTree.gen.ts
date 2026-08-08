@@ -14,6 +14,12 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as SellRouteImport } from './routes/sell'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ServicesIdRouteImport } from './routes/services.$id'
+import { Route as ServicesBecomeRouteImport } from './routes/services.become'
+import { Route as ServicesDashboardRouteImport } from './routes/services.dashboard'
+import { Route as ServicesNewRouteImport } from './routes/services.new'
+import { Route as ServicesOrdersRouteImport } from './routes/services.orders'
 import { Route as ApiPublicPaymentsApproveRouteImport } from './routes/api/public/payments.approve'
 import { Route as ApiPublicPaymentsCompleteRouteImport } from './routes/api/public/payments.complete'
 
@@ -42,6 +48,36 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesIdRoute = ServicesIdRouteImport.update({
+  id: '/services/$id',
+  path: '/services/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesBecomeRoute = ServicesBecomeRouteImport.update({
+  id: '/services/become',
+  path: '/services/become',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesDashboardRoute = ServicesDashboardRouteImport.update({
+  id: '/services/dashboard',
+  path: '/services/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesNewRoute = ServicesNewRouteImport.update({
+  id: '/services/new',
+  path: '/services/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesOrdersRoute = ServicesOrdersRouteImport.update({
+  id: '/services/orders',
+  path: '/services/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsApproveRoute =
   ApiPublicPaymentsApproveRouteImport.update({
     id: '/api/public/payments/approve',
@@ -61,6 +97,12 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
+  '/services/$id': typeof ServicesIdRoute
+  '/services/become': typeof ServicesBecomeRoute
+  '/services/dashboard': typeof ServicesDashboardRoute
+  '/services/new': typeof ServicesNewRoute
+  '/services/orders': typeof ServicesOrdersRoute
+  '/services/': typeof ServicesIndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -70,6 +112,12 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
+  '/services/$id': typeof ServicesIdRoute
+  '/services/become': typeof ServicesBecomeRoute
+  '/services/dashboard': typeof ServicesDashboardRoute
+  '/services/new': typeof ServicesNewRoute
+  '/services/orders': typeof ServicesOrdersRoute
+  '/services': typeof ServicesIndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -80,6 +128,12 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/product/$id': typeof ProductIdRoute
+  '/services/$id': typeof ServicesIdRoute
+  '/services/become': typeof ServicesBecomeRoute
+  '/services/dashboard': typeof ServicesDashboardRoute
+  '/services/new': typeof ServicesNewRoute
+  '/services/orders': typeof ServicesOrdersRoute
+  '/services/': typeof ServicesIndexRoute
   '/api/public/payments/approve': typeof ApiPublicPaymentsApproveRoute
   '/api/public/payments/complete': typeof ApiPublicPaymentsCompleteRoute
 }
@@ -91,6 +145,12 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/product/$id'
+    | '/services/$id'
+    | '/services/become'
+    | '/services/dashboard'
+    | '/services/new'
+    | '/services/orders'
+    | '/services/'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesByTo: FileRoutesByTo
@@ -100,6 +160,12 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/product/$id'
+    | '/services/$id'
+    | '/services/become'
+    | '/services/dashboard'
+    | '/services/new'
+    | '/services/orders'
+    | '/services'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   id:
@@ -109,6 +175,12 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/product/$id'
+    | '/services/$id'
+    | '/services/become'
+    | '/services/dashboard'
+    | '/services/new'
+    | '/services/orders'
+    | '/services/'
     | '/api/public/payments/approve'
     | '/api/public/payments/complete'
   fileRoutesById: FileRoutesById
@@ -119,6 +191,12 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   SellRoute: typeof SellRoute
   ProductIdRoute: typeof ProductIdRoute
+  ServicesIdRoute: typeof ServicesIdRoute
+  ServicesBecomeRoute: typeof ServicesBecomeRoute
+  ServicesDashboardRoute: typeof ServicesDashboardRoute
+  ServicesNewRoute: typeof ServicesNewRoute
+  ServicesOrdersRoute: typeof ServicesOrdersRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
   ApiPublicPaymentsApproveRoute: typeof ApiPublicPaymentsApproveRoute
   ApiPublicPaymentsCompleteRoute: typeof ApiPublicPaymentsCompleteRoute
 }
@@ -160,6 +238,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/$id': {
+      id: '/services/$id'
+      path: '/services/$id'
+      fullPath: '/services/$id'
+      preLoaderRoute: typeof ServicesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/become': {
+      id: '/services/become'
+      path: '/services/become'
+      fullPath: '/services/become'
+      preLoaderRoute: typeof ServicesBecomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/dashboard': {
+      id: '/services/dashboard'
+      path: '/services/dashboard'
+      fullPath: '/services/dashboard'
+      preLoaderRoute: typeof ServicesDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/new': {
+      id: '/services/new'
+      path: '/services/new'
+      fullPath: '/services/new'
+      preLoaderRoute: typeof ServicesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/orders': {
+      id: '/services/orders'
+      path: '/services/orders'
+      fullPath: '/services/orders'
+      preLoaderRoute: typeof ServicesOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/approve': {
       id: '/api/public/payments/approve'
       path: '/api/public/payments/approve'
@@ -183,19 +303,15 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   SellRoute: SellRoute,
   ProductIdRoute: ProductIdRoute,
+  ServicesIdRoute: ServicesIdRoute,
+  ServicesBecomeRoute: ServicesBecomeRoute,
+  ServicesDashboardRoute: ServicesDashboardRoute,
+  ServicesNewRoute: ServicesNewRoute,
+  ServicesOrdersRoute: ServicesOrdersRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
   ApiPublicPaymentsApproveRoute: ApiPublicPaymentsApproveRoute,
   ApiPublicPaymentsCompleteRoute: ApiPublicPaymentsCompleteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
