@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://vtgnwztxvfpsyulwpldh.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "sellfy-pi",
+      "version": "0.1.0",
+      "title": "Sellfy.pi"
+    },
+    "tools": [
+      {
+        "name": "get_my_profile",
+        "title": "Get my profile",
+        "description": "Return the signed-in user's Pi Network profile (Pi username and Pi UID).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_purchases",
+        "title": "List my purchases",
+        "description": "List the signed-in user's Pi digital product purchases, newest first, optionally filtered by status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Only return purchases with this status.",
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved",
+                "completed",
+                "cancelled"
+              ]
+            },
+            "limit": {
+              "description": "Maximum number of purchases to return (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_purchase",
+        "title": "Get purchase",
+        "description": "Look up one of the signed-in user's purchases by its Pi payment id, including status and blockchain txid.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "payment_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The Pi payment identifier of the purchase."
+            }
+          },
+          "required": [
+            "payment_id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
