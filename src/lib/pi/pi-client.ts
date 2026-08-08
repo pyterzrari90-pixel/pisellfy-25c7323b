@@ -1,4 +1,4 @@
-import { PI_SANDBOX, PI_SCOPES, PI_SDK_VERSION } from "./pi-config";
+import { PI_CLIENT_ID, PI_ENVIRONMENT, PI_SANDBOX, PI_SCOPES, PI_SDK_VERSION } from "./pi-config";
 import type { PiAuthResult, PiPaymentCallbacks, PiPaymentDTO, PiSDK } from "./pi-types";
 
 /** Wait for the Pi SDK script (loaded in __root.tsx) to be available. */
@@ -19,9 +19,16 @@ let initialized = false;
 export async function initPi(): Promise<void> {
   if (initialized) return;
   const Pi = await getPi();
+  if (PI_ENVIRONMENT === "mainnet" && !PI_CLIENT_ID) {
+    console.warn(
+      "[pi] VITE_PI_CLIENT_ID_MAINNET is empty — set it before going live on Pi Mainnet.",
+    );
+  }
+  // Mainnet => sandbox: false (real payments). Testnet => sandbox: true.
   Pi.init({ version: PI_SDK_VERSION, sandbox: PI_SANDBOX });
   initialized = true;
 }
+
 
 export async function piAuthenticate(
   onIncompletePaymentFound: (payment: PiPaymentDTO) => void = () => {},
