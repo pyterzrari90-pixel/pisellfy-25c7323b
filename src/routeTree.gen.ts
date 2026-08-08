@@ -15,6 +15,8 @@ import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as SellRouteImport } from './routes/sell'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesIdRouteImport } from './routes/courses.$id'
+import { Route as CoursesBecomeRouteImport } from './routes/courses.become'
+import { Route as CoursesNewRouteImport } from './routes/courses.new'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesIdRouteImport } from './routes/services.$id'
@@ -53,6 +55,16 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
 const CoursesIdRoute = CoursesIdRouteImport.update({
   id: '/courses/$id',
   path: '/courses/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesBecomeRoute = CoursesBecomeRouteImport.update({
+  id: '/courses/become',
+  path: '/courses/become',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesNewRoute = CoursesNewRouteImport.update({
+  id: '/courses/new',
+  path: '/courses/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -109,6 +121,8 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/courses/$id': typeof CoursesIdRoute
+  '/courses/become': typeof CoursesBecomeRoute
+  '/courses/new': typeof CoursesNewRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -126,6 +140,8 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/courses/$id': typeof CoursesIdRoute
+  '/courses/become': typeof CoursesBecomeRoute
+  '/courses/new': typeof CoursesNewRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -144,6 +160,8 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/sell': typeof SellRoute
   '/courses/$id': typeof CoursesIdRoute
+  '/courses/become': typeof CoursesBecomeRoute
+  '/courses/new': typeof CoursesNewRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -163,6 +181,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/courses/$id'
+    | '/courses/become'
+    | '/courses/new'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -180,6 +200,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/courses/$id'
+    | '/courses/become'
+    | '/courses/new'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -197,6 +219,8 @@ export interface FileRouteTypes {
     | '/orders'
     | '/sell'
     | '/courses/$id'
+    | '/courses/become'
+    | '/courses/new'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -215,6 +239,8 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   SellRoute: typeof SellRoute
   CoursesIdRoute: typeof CoursesIdRoute
+  CoursesBecomeRoute: typeof CoursesBecomeRoute
+  CoursesNewRoute: typeof CoursesNewRoute
   ProductIdRoute: typeof ProductIdRoute
   ServicesIdRoute: typeof ServicesIdRoute
   ServicesBecomeRoute: typeof ServicesBecomeRoute
@@ -269,6 +295,20 @@ declare module '@tanstack/react-router' {
       path: '/courses/$id'
       fullPath: '/courses/$id'
       preLoaderRoute: typeof CoursesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/become': {
+      id: '/courses/become'
+      path: '/courses/become'
+      fullPath: '/courses/become'
+      preLoaderRoute: typeof CoursesBecomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/new': {
+      id: '/courses/new'
+      path: '/courses/new'
+      fullPath: '/courses/new'
+      preLoaderRoute: typeof CoursesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -343,6 +383,8 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   SellRoute: SellRoute,
   CoursesIdRoute: CoursesIdRoute,
+  CoursesBecomeRoute: CoursesBecomeRoute,
+  CoursesNewRoute: CoursesNewRoute,
   ProductIdRoute: ProductIdRoute,
   ServicesIdRoute: ServicesIdRoute,
   ServicesBecomeRoute: ServicesBecomeRoute,
@@ -357,13 +399,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
