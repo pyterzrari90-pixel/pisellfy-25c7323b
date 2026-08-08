@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { StoreProvider } from "../lib/marketplace/store";
+import { initPi } from "../lib/pi/pi-client";
 
 function NotFoundComponent() {
   return (
