@@ -103,12 +103,12 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
     setPiUsername(null);
   }, []);
 
-  // Automatically trigger Pi authentication on app load.
+  // Automatically trigger Pi authentication on app load (silent: no toast noise).
   useEffect(() => {
     if (loading || session || autoTried.current) return;
     autoTried.current = true;
-    void signIn();
-  }, [loading, session, signIn]);
+    void runSignIn(true);
+  }, [loading, session, runSignIn]);
 
   return (
     <PiAuthContext.Provider
