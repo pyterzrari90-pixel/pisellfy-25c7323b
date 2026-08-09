@@ -83,6 +83,154 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          payment_id: string | null
+          period_end: string
+          period_start: string
+          status: string
+          subscriber_id: string
+          subscription_id: string
+          txid: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          payment_id?: string | null
+          period_end: string
+          period_start?: string
+          status?: string
+          subscriber_id: string
+          subscription_id: string
+          txid?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_id?: string | null
+          period_end?: string
+          period_start?: string
+          status?: string
+          subscriber_id?: string
+          subscription_id?: string
+          txid?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_payments_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          benefits: Json
+          created_at: string
+          description: string
+          id: string
+          included_content: Json
+          interval: Database["public"]["Enums"]["billing_interval"]
+          is_active: boolean
+          name: string
+          price: number
+          seller_id: string
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          benefits?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          included_content?: Json
+          interval?: Database["public"]["Enums"]["billing_interval"]
+          is_active?: boolean
+          name: string
+          price: number
+          seller_id: string
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          benefits?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          included_content?: Json
+          interval?: Database["public"]["Enums"]["billing_interval"]
+          is_active?: boolean
+          name?: string
+          price?: number
+          seller_id?: string
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          canceled_at: string | null
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          id: string
+          next_billing_at: string
+          pi_contract_id: string | null
+          plan_id: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          subscriber_id: string
+          updated_at: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          next_billing_at?: string
+          pi_contract_id?: string | null
+          plan_id: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          subscriber_id: string
+          updated_at?: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          next_billing_at?: string
+          pi_contract_id?: string | null
+          plan_id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          subscriber_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -91,7 +239,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      billing_interval: "weekly" | "monthly" | "yearly"
+      subscription_status:
+        | "active"
+        | "past_due"
+        | "canceled"
+        | "expired"
+        | "pending"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -218,6 +372,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      billing_interval: ["weekly", "monthly", "yearly"],
+      subscription_status: [
+        "active",
+        "past_due",
+        "canceled",
+        "expired",
+        "pending",
+      ],
+    },
   },
 } as const
