@@ -78,10 +78,9 @@ export const useMySubscriptions = () => {
 
   const chargeAndSave = useCallback(
     async (plan: SubscriptionPlan) => {
-      let uid = userId;
-      if (!uid) {
+      if (!userId) {
         await signIn();
-        uid = null;
+        return;
       }
       setPendingPlanId(plan.id);
       try {
@@ -91,7 +90,7 @@ export const useMySubscriptions = () => {
         );
         await activateSubscription({
           planId: plan.id,
-          subscriberId: uid ?? (await (async () => userId ?? "")()),
+          subscriberId: userId,
           interval: plan.interval,
           amount: plan.price,
           paymentId,
