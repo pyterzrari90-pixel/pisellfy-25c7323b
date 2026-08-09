@@ -5,6 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PiAuthProvider } from "@/hooks/usePiAuth";
 import Index from "./pages/Index";
+import Subscriptions from "./pages/Subscriptions";
+import CreateSubscription from "./pages/CreateSubscription";
+import MySubscriptions from "./pages/MySubscriptions";
+import SellerSubscriptions from "./pages/SellerSubscriptions";
 import OAuthConsent from "./pages/OAuthConsent";
 import NotFound from "./pages/NotFound";
 
