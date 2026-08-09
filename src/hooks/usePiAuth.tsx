@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authenticateWithPi } from "@/lib/pi";
+import { redirectAfterAuth } from "@/lib/piConfig";
+import { toast } from "@/hooks/use-toast";
 
 interface PiAuthContextValue {
   session: Session | null;
