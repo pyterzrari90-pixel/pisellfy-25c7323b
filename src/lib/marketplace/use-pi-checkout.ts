@@ -1,17 +1,9 @@
 import { useCallback, useState } from "react";
 
+import { approvePayment, completePayment } from "@/lib/pi/payment-api";
 import { piCreatePayment } from "@/lib/pi/pi-client";
 import { useStore, type Order } from "./store";
 
-async function post(path: string, body: unknown) {
-  const res = await fetch(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error((await res.json().catch(() => null))?.error ?? "Request failed");
-  return res.json();
-}
 
 export type PaymentStatus =
   | { state: "idle" }
@@ -51,13 +43,13 @@ export function usePiCheckout() {
           {
             onReadyForServerApproval: (paymentId) => {
               setStatus({ state: "pending", message: "Approving payment…" });
-              post("/api/public/payments/approve", { paymentId }).catch((error: Error) =>
+              approvePayment(paymentId).catch((error: Error) =>
                 setStatus({ state: "error", message: error.message }),
               );
             },
             onReadyForServerCompletion: (paymentId, txid) => {
               setStatus({ state: "pending", message: "Completing payment…" });
-              post("/api/public/payments/complete", { paymentId, txid })
+              completePayment(paymentId, txid)
                 .then(() => {
                   const order: Order = {
                     id: `o-${Date.now().toString(36)}`,

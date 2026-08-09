@@ -15,14 +15,27 @@ export const Route = createFileRoute("/api/public/payments/approve")({
         if (!parsed.success) {
           return Response.json({ error: "Invalid payload" }, { status: 400 });
         }
-        const res = await fetch(
-          `https://api.minepi.com/v2/payments/${encodeURIComponent(parsed.data.paymentId)}/approve`,
-          { method: "POST", headers: { Authorization: `Key ${apiKey}` } },
-        );
-        if (!res.ok) {
-          console.error("Pi approve failed", res.status, await res.text());
-          return Response.json({ error: "Approval failed" }, { status: 502 });
+        const url = `https://api.minepi.com/v2/payments/${encodeURIComponent(parsed.data.paymentId)}/approve`;
+        let res: Response;
+        try {
+          res = await fetch(url, {
+            method: "POST",
+            headers: { Authorization: `Key ${apiKey}`, "Content-Type": "application/json" },
+            signal: AbortSignal.timeout(8000),
+          });
+        } catch (error) {
+          console.error("Pi approve network error", error);
+          return Response.json({ error: "Pi API unreachable" }, { status: 502 });
         }
+        const text = await res.text();
+        if (!res.ok) {
+          console.error("Pi approve failed", res.status, text);
+          return Response.json(
+            { error: "Approval failed", piStatus: res.status, piBody: text.slice(0, 500) },
+            { status: 502 },
+          );
+        }
+        console.log("Pi approve ok", parsed.data.paymentId);
         return Response.json({ approved: true });
       },
     },

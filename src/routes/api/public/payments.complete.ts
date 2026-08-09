@@ -18,18 +18,28 @@ export const Route = createFileRoute("/api/public/payments/complete")({
         if (!parsed.success) {
           return Response.json({ error: "Invalid payload" }, { status: 400 });
         }
-        const res = await fetch(
-          `https://api.minepi.com/v2/payments/${encodeURIComponent(parsed.data.paymentId)}/complete`,
-          {
+        const url = `https://api.minepi.com/v2/payments/${encodeURIComponent(parsed.data.paymentId)}/complete`;
+        let res: Response;
+        try {
+          res = await fetch(url, {
             method: "POST",
             headers: { Authorization: `Key ${apiKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({ txid: parsed.data.txid }),
-          },
-        );
-        if (!res.ok) {
-          console.error("Pi complete failed", res.status, await res.text());
-          return Response.json({ error: "Completion failed" }, { status: 502 });
+            signal: AbortSignal.timeout(10000),
+          });
+        } catch (error) {
+          console.error("Pi complete network error", error);
+          return Response.json({ error: "Pi API unreachable" }, { status: 502 });
         }
+        const text = await res.text();
+        if (!res.ok) {
+          console.error("Pi complete failed", res.status, text);
+          return Response.json(
+            { error: "Completion failed", piStatus: res.status, piBody: text.slice(0, 500) },
+            { status: 502 },
+          );
+        }
+        console.log("Pi complete ok", parsed.data.paymentId);
         return Response.json({ completed: true });
       },
     },
