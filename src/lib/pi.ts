@@ -1,6 +1,7 @@
 // Pi Network SDK loader + init helper.
 // Docs: https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Authentication
 //       https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Payments
+import { PI_SCOPES } from "@/lib/piConfig";
 
 export interface PiAuthResult {
   accessToken: string;
