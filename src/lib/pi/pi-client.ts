@@ -29,13 +29,81 @@ export async function initPi(): Promise<void> {
   initialized = true;
 }
 
+/**
+ * Marker written after a successful Pi.authenticate() that included the
+ * "payments" scope. Sessions created before this marker existed (or granted
+ * only "username") are treated as missing the scope, which triggers a fresh
+ * consent prompt instead of the "Cannot create a payment without 'payments'
+ * scope" error.
+ */
+const SCOPES_KEY = "sellfy.pi.scopes";
+
+function readGrantedScopes(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(SCOPES_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function hasPaymentsScope(): boolean {
+  return readGrantedScopes().includes("payments");
+}
+
+export function clearGrantedScopes(): void {
+  if (typeof window !== "undefined") window.localStorage.removeItem(SCOPES_KEY);
+}
+
+/**
+ * Default handler for payments left unfinished in a previous session.
+ * Pi requires the app to resolve them before a new payment can start.
+ */
+export async function handleIncompletePayment(payment: PiPaymentDTO): Promise<void> {
+  const txid = payment.transaction?.txid;
+  if (!txid) {
+    console.warn("[pi] Incomplete payment without txid, skipping:", payment.identifier);
+    return;
+  }
+  try {
+    await fetch("/api/public/payments/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paymentId: payment.identifier, txid }),
+    });
+  } catch (error) {
+    console.warn("[pi] Failed to complete incomplete payment", error);
+  }
+}
 
 export async function piAuthenticate(
-  onIncompletePaymentFound: (payment: PiPaymentDTO) => void = () => {},
+  onIncompletePaymentFound: (payment: PiPaymentDTO) => void = (payment) => {
+    void handleIncompletePayment(payment);
+  },
 ): Promise<PiAuthResult> {
   await initPi();
   const Pi = await getPi();
-  return Pi.authenticate(PI_SCOPES, onIncompletePaymentFound);
+  // Always request BOTH scopes: "username" (identity) and "payments" (Pi.createPayment).
+  const result = await Pi.authenticate([...PI_SCOPES], onIncompletePaymentFound);
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(SCOPES_KEY, JSON.stringify([...PI_SCOPES]));
+  }
+  return result;
+}
+
+/**
+ * Guarantees the current session granted the "payments" scope before any
+ * Pi.createPayment() call. Re-runs Pi Sign-In when it did not.
+ */
+export async function ensurePaymentsScope(): Promise<void> {
+  if (hasPaymentsScope()) return;
+  await piAuthenticate();
+  if (!hasPaymentsScope()) {
+    throw new Error(
+      "The 'payments' permission was not granted. Please sign out and sign in again in the Pi Browser.",
+    );
+  }
 }
 
 export async function piCreatePayment(
@@ -43,6 +111,7 @@ export async function piCreatePayment(
   callbacks: PiPaymentCallbacks,
 ): Promise<void> {
   await initPi();
+  await ensurePaymentsScope();
   const Pi = await getPi();
   Pi.createPayment(payment, callbacks);
 }
