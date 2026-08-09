@@ -110,8 +110,8 @@ export async function handleIncompletePayment(payment: PiPaymentDTO) {
 
 export async function authenticateWithPi(): Promise<PiAuthResult> {
   const Pi = await initPi();
-  // "payments" scope is required for U2A payments via Pi.createPayment.
-  return await Pi.authenticate(["username", "payments"], (payment) => {
+  // "username" is the minimum; "payments" is required for U2A payments via Pi.createPayment.
+  return await Pi.authenticate([...PI_SCOPES], (payment) => {
     void handleIncompletePayment(payment);
   });
 }
