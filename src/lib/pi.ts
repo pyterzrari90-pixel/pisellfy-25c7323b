@@ -1,6 +1,7 @@
 // Pi Network SDK loader + init helper.
 // Docs: https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Authentication
 //       https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Payments
+import { PI_SCOPES } from "@/lib/piConfig";
 
 export interface PiAuthResult {
   accessToken: string;
@@ -110,8 +111,8 @@ export async function handleIncompletePayment(payment: PiPaymentDTO) {
 
 export async function authenticateWithPi(): Promise<PiAuthResult> {
   const Pi = await initPi();
-  // "payments" scope is required for U2A payments via Pi.createPayment.
-  return await Pi.authenticate(["username", "payments"], (payment) => {
+  // "username" is the minimum; "payments" is required for U2A payments via Pi.createPayment.
+  return await Pi.authenticate([...PI_SCOPES], (payment) => {
     void handleIncompletePayment(payment);
   });
 }

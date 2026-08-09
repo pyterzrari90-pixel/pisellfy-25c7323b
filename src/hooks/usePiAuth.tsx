@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authenticateWithPi } from "@/lib/pi";
+import { redirectAfterAuth } from "@/lib/piConfig";
+import { toast } from "@/hooks/use-toast";
 
 interface PiAuthContextValue {
   session: Session | null;
@@ -40,7 +42,7 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  const signIn = useCallback(async () => {
+  const runSignIn = useCallback(async (silent: boolean) => {
     if (inFlight.current) return;
     inFlight.current = true;
     setLoading(true);
@@ -62,15 +64,38 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (otpError) throw otpError;
 
       setPiUsername(data.pi_username ?? auth.user?.username ?? null);
+      if (!silent) {
+        toast({
+          title: "Signed in with Pi",
+          description: `Welcome @${data.pi_username ?? auth.user?.username ?? "pioneer"}`,
+        });
+      }
+      // Send the pioneer to the configured Pi redirect URI (no-op if already there).
+      redirectAfterAuth();
     } catch (e) {
-      const message = e instanceof Error ? e.message : "Pi authentication failed";
+      const raw = e instanceof Error ? e.message : "Pi authentication failed";
+      const cancelled = /cancel|denied|abort|closed/i.test(raw);
+      const message = cancelled
+        ? "Pi sign-in was cancelled."
+        : /Pi SDK|Pi Browser/i.test(raw)
+          ? "Open this app in the Pi Browser to sign in with Pi."
+          : raw;
       setError(message);
-      console.error("Pi authentication failed:", message);
+      console.error("Pi authentication failed:", raw);
+      if (!silent) {
+        toast({
+          title: cancelled ? "Sign-in cancelled" : "Pi sign-in failed",
+          description: message,
+          variant: "destructive",
+        });
+      }
     } finally {
       inFlight.current = false;
       setLoading(false);
     }
   }, []);
+
+  const signIn = useCallback(() => runSignIn(false), [runSignIn]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
@@ -78,12 +103,12 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
     setPiUsername(null);
   }, []);
 
-  // Automatically trigger Pi authentication on app load.
+  // Automatically trigger Pi authentication on app load (silent: no toast noise).
   useEffect(() => {
     if (loading || session || autoTried.current) return;
     autoTried.current = true;
-    void signIn();
-  }, [loading, session, signIn]);
+    void runSignIn(true);
+  }, [loading, session, runSignIn]);
 
   return (
     <PiAuthContext.Provider
