@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-import { piAuthenticate } from "@/lib/pi/pi-client";
+import { clearGrantedScopes, piAuthenticate } from "@/lib/pi/pi-client";
 import { seedProducts, type Product } from "./products";
 
 export interface CartLine {
@@ -118,6 +118,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     setUser(null);
+    clearGrantedScopes();
     window.localStorage.removeItem(LS.user);
   }, []);
 
