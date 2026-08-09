@@ -42,13 +42,13 @@ export function usePiPayment() {
           {
             onReadyForServerApproval: (paymentId) => {
               setStatus({ state: "pending", message: "Approving payment…" });
-              post("/api/public/payments/approve", { paymentId }).catch((error: Error) =>
+              approvePayment(paymentId).catch((error: Error) =>
                 setStatus({ state: "error", message: error.message }),
               );
             },
             onReadyForServerCompletion: (paymentId, txid) => {
               setStatus({ state: "pending", message: "Completing payment…" });
-              post("/api/public/payments/complete", { paymentId, txid })
+              completePayment(paymentId, txid)
                 .then(() => {
                   onPaid({ paymentId, txid, amount });
                   setStatus({
