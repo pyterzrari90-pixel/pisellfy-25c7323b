@@ -14,19 +14,25 @@ async function getPi(timeoutMs = 8000): Promise<PiSDK> {
   return window.Pi;
 }
 
-let initialized = false;
+let initPromise: Promise<void> | null = null;
 
 export async function initPi(): Promise<void> {
-  if (initialized) return;
-  const Pi = await getPi();
-  if (PI_ENVIRONMENT === "mainnet" && !PI_CLIENT_ID) {
-    console.warn(
-      "[pi] VITE_PI_CLIENT_ID_MAINNET is empty — set it before going live on Pi Mainnet.",
-    );
+  if (!initPromise) {
+    initPromise = (async () => {
+      const Pi = await getPi();
+      if (PI_ENVIRONMENT === "mainnet" && !PI_CLIENT_ID) {
+        console.warn(
+          "[pi] VITE_PI_CLIENT_ID_MAINNET is empty — set it before going live on Pi Mainnet.",
+        );
+      }
+      // Pi.init() may return a Promise: await it fully before authenticate().
+      await Promise.resolve(Pi.init({ version: PI_SDK_VERSION, sandbox: PI_SANDBOX }));
+    })().catch((error: unknown) => {
+      initPromise = null;
+      throw error;
+    });
   }
-  // Mainnet => sandbox: false (real payments). Testnet => sandbox: true.
-  Pi.init({ version: PI_SDK_VERSION, sandbox: PI_SANDBOX });
-  initialized = true;
+  return initPromise;
 }
 
 /**

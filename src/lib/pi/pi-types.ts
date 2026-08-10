@@ -21,7 +21,8 @@ export interface PiPaymentCallbacks {
 }
 
 export interface PiSDK {
-  init: (config: { version: string; sandbox?: boolean }) => void;
+  /** May return a Promise — always await it before calling authenticate(). */
+  init: (config: { version: string; sandbox?: boolean }) => void | Promise<void>;
   authenticate: (
     scopes: readonly string[],
     onIncompletePaymentFound: (payment: PiPaymentDTO) => void,
