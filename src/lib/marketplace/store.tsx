@@ -98,9 +98,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setAuthError(null);
     try {
       const result = await piAuthenticate();
+      // The backend validates the access token against GET /v2/me before we
+      // establish a local session.
+      const verified = await verifyPiAccessToken(result.accessToken);
       const next: PiUser = {
-        uid: result.user.uid,
-        username: result.user.username,
+        uid: verified.uid,
+        username: verified.username || result.user.username,
         accessToken: result.accessToken,
       };
       setUser(next);
@@ -115,6 +118,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setAuthPending(false);
     }
   }, []);
+
+  // Automatically trigger Pi authentication once the app has loaded.
+  useEffect(() => {
+    if (!hydrated || user || authPending || autoSignInDone.current) return;
+    if (!isPiBrowser()) return;
+    autoSignInDone.current = true;
+    void signIn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, user, signIn]);
 
   const signOut = useCallback(() => {
     setUser(null);
