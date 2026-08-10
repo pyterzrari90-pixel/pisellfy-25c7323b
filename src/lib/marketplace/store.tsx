@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
-import { clearGrantedScopes, piAuthenticate } from "@/lib/pi/pi-client";
+import { verifyPiAccessToken } from "@/lib/pi/auth-api";
+import { clearGrantedScopes, isPiBrowser, piAuthenticate } from "@/lib/pi/pi-client";
 import { seedProducts, type Product } from "./products";
 
 export interface CartLine {
@@ -69,6 +70,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [userProducts, setUserProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const autoSignInDone = useRef(false);
 
   useEffect(() => {
     setUser(read<PiUser | null>(LS.user, null));
@@ -98,9 +100,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setAuthError(null);
     try {
       const result = await piAuthenticate();
+      // The backend validates the access token against GET /v2/me before we
+      // establish a local session.
+      const verified = await verifyPiAccessToken(result.accessToken);
       const next: PiUser = {
-        uid: result.user.uid,
-        username: result.user.username,
+        uid: verified.uid,
+        username: verified.username || result.user.username,
         accessToken: result.accessToken,
       };
       setUser(next);
@@ -115,6 +120,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setAuthPending(false);
     }
   }, []);
+
+  // Automatically trigger Pi authentication once the app has loaded.
+  useEffect(() => {
+    if (!hydrated || user || authPending || autoSignInDone.current) return;
+    if (!isPiBrowser()) return;
+    autoSignInDone.current = true;
+    void signIn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, user, signIn]);
 
   const signOut = useCallback(() => {
     setUser(null);
