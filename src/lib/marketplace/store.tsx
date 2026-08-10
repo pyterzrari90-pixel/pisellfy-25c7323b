@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
-import { clearGrantedScopes, piAuthenticate } from "@/lib/pi/pi-client";
+import { verifyPiAccessToken } from "@/lib/pi/auth-api";
+import { clearGrantedScopes, isPiBrowser, piAuthenticate } from "@/lib/pi/pi-client";
 import { seedProducts, type Product } from "./products";
 
 export interface CartLine {
@@ -69,6 +70,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [userProducts, setUserProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const autoSignInDone = useRef(false);
 
   useEffect(() => {
     setUser(read<PiUser | null>(LS.user, null));
