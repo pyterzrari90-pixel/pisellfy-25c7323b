@@ -54,7 +54,7 @@ function CourseDetail() {
       {
         amount: course.price,
         memo: `sellfy course: ${course.title.slice(0, 45)}`,
-        metadata: { type: "course", courseId: course.id, uid: user.uid },
+        metadata: { kind: "course", courseId: course.id, uid: user.uid },
       },
       ({ paymentId, txid }) => {
         enroll({

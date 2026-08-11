@@ -10,7 +10,7 @@ export const Route = createFileRoute("/api/public/payments/complete")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env['PI_API_KEY'];
+        const apiKey = process.env['PI_NETWORK_API_KEY'] ?? process.env['PI_API_KEY'];
         if (!apiKey) {
           return Response.json({ error: "Pi server API key is not configured" }, { status: 500 });
         }

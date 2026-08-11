@@ -39,7 +39,15 @@ export function usePiCheckout() {
 
       try {
         await piCreatePayment(
-          { amount, memo, metadata: { uid: user.uid, items } },
+          {
+            amount,
+            memo,
+            metadata: {
+              kind: items.length > 1 ? "cart" : "product",
+              uid: user.uid,
+              items,
+            },
+          },
           {
             onReadyForServerApproval: (paymentId) => {
               setStatus({ state: "pending", message: "Approving payment…" });
