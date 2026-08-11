@@ -20,6 +20,7 @@ import { Route as CoursesDashboardRouteImport } from './routes/courses.dashboard
 import { Route as CoursesMyRouteImport } from './routes/courses.my'
 import { Route as CoursesNewRouteImport } from './routes/courses.new'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardSellerRouteImport } from './routes/dashboard.seller'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesIdRouteImport } from './routes/services.$id'
@@ -85,6 +86,11 @@ const CoursesNewRoute = CoursesNewRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSellerRoute = DashboardSellerRouteImport.update({
+  id: '/dashboard/seller',
+  path: '/dashboard/seller',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   CoursesDashboardRoute: typeof CoursesDashboardRoute
   CoursesMyRoute: typeof CoursesMyRoute
   CoursesNewRoute: typeof CoursesNewRoute
+  DashboardSellerRoute: typeof DashboardSellerRoute
   ProductIdRoute: typeof ProductIdRoute
   ServicesIdRoute: typeof ServicesIdRoute
   ServicesBecomeRoute: typeof ServicesBecomeRoute
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/seller': {
+      id: '/dashboard/seller'
+      path: '/dashboard/seller'
+      fullPath: '/dashboard/seller'
+      preLoaderRoute: typeof DashboardSellerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -487,6 +507,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesDashboardRoute: CoursesDashboardRoute,
   CoursesMyRoute: CoursesMyRoute,
   CoursesNewRoute: CoursesNewRoute,
+  DashboardSellerRoute: DashboardSellerRoute,
   ProductIdRoute: ProductIdRoute,
   ServicesIdRoute: ServicesIdRoute,
   ServicesBecomeRoute: ServicesBecomeRoute,
