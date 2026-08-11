@@ -19,6 +19,7 @@ import { Route as CoursesBecomeRouteImport } from './routes/courses.become'
 import { Route as CoursesDashboardRouteImport } from './routes/courses.dashboard'
 import { Route as CoursesMyRouteImport } from './routes/courses.my'
 import { Route as CoursesNewRouteImport } from './routes/courses.new'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesIdRouteImport } from './routes/services.$id'
@@ -79,6 +80,11 @@ const CoursesMyRoute = CoursesMyRouteImport.update({
 const CoursesNewRoute = CoursesNewRouteImport.update({
   id: '/courses/new',
   path: '/courses/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses': typeof CoursesIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/services': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses/'
+    | '/dashboard/'
     | '/services/'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses'
+    | '/dashboard'
     | '/services'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses/'
+    | '/dashboard/'
     | '/services/'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   ServicesNewRoute: typeof ServicesNewRoute
   ServicesOrdersRoute: typeof ServicesOrdersRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   CoursesLearnIdRoute: typeof CoursesLearnIdRoute
   ApiPublicAuthVerifyRoute: typeof ApiPublicAuthVerifyRoute
@@ -375,6 +388,13 @@ declare module '@tanstack/react-router' {
       path: '/courses/new'
       fullPath: '/courses/new'
       preLoaderRoute: typeof CoursesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -474,6 +494,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesNewRoute: ServicesNewRoute,
   ServicesOrdersRoute: ServicesOrdersRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   CoursesLearnIdRoute: CoursesLearnIdRoute,
   ApiPublicAuthVerifyRoute: ApiPublicAuthVerifyRoute,
@@ -483,13 +504,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
