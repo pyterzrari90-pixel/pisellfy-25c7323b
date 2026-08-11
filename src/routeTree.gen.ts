@@ -20,6 +20,7 @@ import { Route as CoursesDashboardRouteImport } from './routes/courses.dashboard
 import { Route as CoursesMyRouteImport } from './routes/courses.my'
 import { Route as CoursesNewRouteImport } from './routes/courses.new'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 import { Route as DashboardFreelanceRouteImport } from './routes/dashboard.freelance'
 import { Route as DashboardInstructorRouteImport } from './routes/dashboard.instructor'
 import { Route as DashboardSellerRouteImport } from './routes/dashboard.seller'
@@ -88,6 +89,11 @@ const CoursesNewRoute = CoursesNewRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/dashboard/admin',
+  path: '/dashboard/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardFreelanceRoute = DashboardFreelanceRouteImport.update({
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/instructor': typeof DashboardInstructorRoute
   '/dashboard/seller': typeof DashboardSellerRoute
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/instructor': typeof DashboardInstructorRoute
   '/dashboard/seller': typeof DashboardSellerRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/instructor': typeof DashboardInstructorRoute
   '/dashboard/seller': typeof DashboardSellerRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
     | '/dashboard/freelance'
     | '/dashboard/instructor'
     | '/dashboard/seller'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
     | '/dashboard/freelance'
     | '/dashboard/instructor'
     | '/dashboard/seller'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
     | '/dashboard/freelance'
     | '/dashboard/instructor'
     | '/dashboard/seller'
@@ -339,6 +351,7 @@ export interface RootRouteChildren {
   CoursesDashboardRoute: typeof CoursesDashboardRoute
   CoursesMyRoute: typeof CoursesMyRoute
   CoursesNewRoute: typeof CoursesNewRoute
+  DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardFreelanceRoute: typeof DashboardFreelanceRoute
   DashboardInstructorRoute: typeof DashboardInstructorRoute
   DashboardSellerRoute: typeof DashboardSellerRoute
@@ -434,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/dashboard/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/freelance': {
@@ -547,6 +567,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesDashboardRoute: CoursesDashboardRoute,
   CoursesMyRoute: CoursesMyRoute,
   CoursesNewRoute: CoursesNewRoute,
+  DashboardAdminRoute: DashboardAdminRoute,
   DashboardFreelanceRoute: DashboardFreelanceRoute,
   DashboardInstructorRoute: DashboardInstructorRoute,
   DashboardSellerRoute: DashboardSellerRoute,
