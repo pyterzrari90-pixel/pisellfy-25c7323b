@@ -73,11 +73,9 @@ export async function handleIncompletePayment(payment: PiPaymentDTO): Promise<vo
     return;
   }
   try {
-    await fetch("/api/public/payments/complete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paymentId: payment.identifier, txid }),
-    });
+    const { completePayment } = await import("./payment-api");
+    await completePayment(payment.identifier, txid);
+    console.log("[pi] Resolved incomplete payment", payment.identifier);
   } catch (error) {
     console.warn("[pi] Failed to complete incomplete payment", error);
   }
