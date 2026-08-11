@@ -57,7 +57,7 @@ function GigDetail() {
       {
         amount: selected.price,
         memo: `sellfy service: ${gig.title.slice(0, 40)} (${selected.tier})`,
-        metadata: { type: "service", gigId: gig.id, tier: selected.tier, uid: user.uid },
+        metadata: { kind: "service", gigId: gig.id, tier: selected.tier, uid: user.uid },
       },
       ({ paymentId, txid }) => {
         addOrder({
