@@ -20,6 +20,7 @@ import { Route as CoursesDashboardRouteImport } from './routes/courses.dashboard
 import { Route as CoursesMyRouteImport } from './routes/courses.my'
 import { Route as CoursesNewRouteImport } from './routes/courses.new'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardFreelanceRouteImport } from './routes/dashboard.freelance'
 import { Route as DashboardSellerRouteImport } from './routes/dashboard.seller'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
@@ -86,6 +87,11 @@ const CoursesNewRoute = CoursesNewRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardFreelanceRoute = DashboardFreelanceRouteImport.update({
+  id: '/dashboard/freelance',
+  path: '/dashboard/freelance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardSellerRoute = DashboardSellerRouteImport.update({
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
   '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/freelance'
     | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/freelance'
     | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/freelance'
     | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
@@ -315,6 +327,7 @@ export interface RootRouteChildren {
   CoursesDashboardRoute: typeof CoursesDashboardRoute
   CoursesMyRoute: typeof CoursesMyRoute
   CoursesNewRoute: typeof CoursesNewRoute
+  DashboardFreelanceRoute: typeof DashboardFreelanceRoute
   DashboardSellerRoute: typeof DashboardSellerRoute
   ProductIdRoute: typeof ProductIdRoute
   ServicesIdRoute: typeof ServicesIdRoute
@@ -408,6 +421,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/freelance': {
+      id: '/dashboard/freelance'
+      path: '/dashboard/freelance'
+      fullPath: '/dashboard/freelance'
+      preLoaderRoute: typeof DashboardFreelanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/seller': {
@@ -507,6 +527,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesDashboardRoute: CoursesDashboardRoute,
   CoursesMyRoute: CoursesMyRoute,
   CoursesNewRoute: CoursesNewRoute,
+  DashboardFreelanceRoute: DashboardFreelanceRoute,
   DashboardSellerRoute: DashboardSellerRoute,
   ProductIdRoute: ProductIdRoute,
   ServicesIdRoute: ServicesIdRoute,
