@@ -3,12 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { InstructorDashboard } from "@/components/dashboard/InstructorDashboard";
 
-export const Route = createFileRoute("/courses/dashboard")({
+export const Route = createFileRoute("/dashboard/instructor")({
   head: () => ({
     meta: [
-      { title: "Instructor hub — sellfy Courses" },
-      { name: "description", content: "Enrolments, Pi revenue and reviews for the courses you teach on sellfy." },
-      { property: "og:title", content: "Instructor hub — sellfy" },
+      { title: "Instructor dashboard — sellfy" },
+      { name: "description", content: "Courses created, students enrolled and Pi revenue per course." },
+      { property: "og:title", content: "Instructor dashboard — sellfy" },
       { property: "og:description", content: "Students, revenue and reviews at a glance." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

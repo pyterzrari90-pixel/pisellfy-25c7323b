@@ -19,6 +19,11 @@ import { Route as CoursesBecomeRouteImport } from './routes/courses.become'
 import { Route as CoursesDashboardRouteImport } from './routes/courses.dashboard'
 import { Route as CoursesMyRouteImport } from './routes/courses.my'
 import { Route as CoursesNewRouteImport } from './routes/courses.new'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
+import { Route as DashboardFreelanceRouteImport } from './routes/dashboard.freelance'
+import { Route as DashboardInstructorRouteImport } from './routes/dashboard.instructor'
+import { Route as DashboardSellerRouteImport } from './routes/dashboard.seller'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesIdRouteImport } from './routes/services.$id'
@@ -79,6 +84,31 @@ const CoursesMyRoute = CoursesMyRouteImport.update({
 const CoursesNewRoute = CoursesNewRouteImport.update({
   id: '/courses/new',
   path: '/courses/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/dashboard/admin',
+  path: '/dashboard/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardFreelanceRoute = DashboardFreelanceRouteImport.update({
+  id: '/dashboard/freelance',
+  path: '/dashboard/freelance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardInstructorRoute = DashboardInstructorRouteImport.update({
+  id: '/dashboard/instructor',
+  path: '/dashboard/instructor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSellerRoute = DashboardSellerRouteImport.update({
+  id: '/dashboard/seller',
+  path: '/dashboard/seller',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -149,6 +179,10 @@ export interface FileRoutesByFullPath {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
+  '/dashboard/instructor': typeof DashboardInstructorRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -156,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -172,6 +207,10 @@ export interface FileRoutesByTo {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
+  '/dashboard/instructor': typeof DashboardInstructorRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -179,6 +218,7 @@ export interface FileRoutesByTo {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses': typeof CoursesIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/services': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -196,6 +236,10 @@ export interface FileRoutesById {
   '/courses/dashboard': typeof CoursesDashboardRoute
   '/courses/my': typeof CoursesMyRoute
   '/courses/new': typeof CoursesNewRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/freelance': typeof DashboardFreelanceRoute
+  '/dashboard/instructor': typeof DashboardInstructorRoute
+  '/dashboard/seller': typeof DashboardSellerRoute
   '/product/$id': typeof ProductIdRoute
   '/services/$id': typeof ServicesIdRoute
   '/services/become': typeof ServicesBecomeRoute
@@ -203,6 +247,7 @@ export interface FileRoutesById {
   '/services/new': typeof ServicesNewRoute
   '/services/orders': typeof ServicesOrdersRoute
   '/courses/': typeof CoursesIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/courses/learn/$id': typeof CoursesLearnIdRoute
   '/api/public/auth/verify': typeof ApiPublicAuthVerifyRoute
@@ -221,6 +266,10 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
+    | '/dashboard/freelance'
+    | '/dashboard/instructor'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -228,6 +277,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses/'
+    | '/dashboard/'
     | '/services/'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -244,6 +294,10 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
+    | '/dashboard/freelance'
+    | '/dashboard/instructor'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -251,6 +305,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses'
+    | '/dashboard'
     | '/services'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -267,6 +322,10 @@ export interface FileRouteTypes {
     | '/courses/dashboard'
     | '/courses/my'
     | '/courses/new'
+    | '/dashboard/admin'
+    | '/dashboard/freelance'
+    | '/dashboard/instructor'
+    | '/dashboard/seller'
     | '/product/$id'
     | '/services/$id'
     | '/services/become'
@@ -274,6 +333,7 @@ export interface FileRouteTypes {
     | '/services/new'
     | '/services/orders'
     | '/courses/'
+    | '/dashboard/'
     | '/services/'
     | '/courses/learn/$id'
     | '/api/public/auth/verify'
@@ -291,6 +351,10 @@ export interface RootRouteChildren {
   CoursesDashboardRoute: typeof CoursesDashboardRoute
   CoursesMyRoute: typeof CoursesMyRoute
   CoursesNewRoute: typeof CoursesNewRoute
+  DashboardAdminRoute: typeof DashboardAdminRoute
+  DashboardFreelanceRoute: typeof DashboardFreelanceRoute
+  DashboardInstructorRoute: typeof DashboardInstructorRoute
+  DashboardSellerRoute: typeof DashboardSellerRoute
   ProductIdRoute: typeof ProductIdRoute
   ServicesIdRoute: typeof ServicesIdRoute
   ServicesBecomeRoute: typeof ServicesBecomeRoute
@@ -298,6 +362,7 @@ export interface RootRouteChildren {
   ServicesNewRoute: typeof ServicesNewRoute
   ServicesOrdersRoute: typeof ServicesOrdersRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   CoursesLearnIdRoute: typeof CoursesLearnIdRoute
   ApiPublicAuthVerifyRoute: typeof ApiPublicAuthVerifyRoute
@@ -375,6 +440,41 @@ declare module '@tanstack/react-router' {
       path: '/courses/new'
       fullPath: '/courses/new'
       preLoaderRoute: typeof CoursesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/dashboard/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/freelance': {
+      id: '/dashboard/freelance'
+      path: '/dashboard/freelance'
+      fullPath: '/dashboard/freelance'
+      preLoaderRoute: typeof DashboardFreelanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/instructor': {
+      id: '/dashboard/instructor'
+      path: '/dashboard/instructor'
+      fullPath: '/dashboard/instructor'
+      preLoaderRoute: typeof DashboardInstructorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/seller': {
+      id: '/dashboard/seller'
+      path: '/dashboard/seller'
+      fullPath: '/dashboard/seller'
+      preLoaderRoute: typeof DashboardSellerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -467,6 +567,10 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesDashboardRoute: CoursesDashboardRoute,
   CoursesMyRoute: CoursesMyRoute,
   CoursesNewRoute: CoursesNewRoute,
+  DashboardAdminRoute: DashboardAdminRoute,
+  DashboardFreelanceRoute: DashboardFreelanceRoute,
+  DashboardInstructorRoute: DashboardInstructorRoute,
+  DashboardSellerRoute: DashboardSellerRoute,
   ProductIdRoute: ProductIdRoute,
   ServicesIdRoute: ServicesIdRoute,
   ServicesBecomeRoute: ServicesBecomeRoute,
@@ -474,6 +578,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesNewRoute: ServicesNewRoute,
   ServicesOrdersRoute: ServicesOrdersRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   CoursesLearnIdRoute: CoursesLearnIdRoute,
   ApiPublicAuthVerifyRoute: ApiPublicAuthVerifyRoute,

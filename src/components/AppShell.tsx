@@ -8,6 +8,7 @@ const sections = [
   { to: "/", label: "Marketplace", match: "shop" },
   { to: "/services", label: "Services", match: "services" },
   { to: "/courses", label: "Courses", match: "courses" },
+  { to: "/dashboard", label: "Dashboard", match: "dashboard" },
 ] as const;
 
 const subNav: Record<string, { to: string; label: string }[]> = {
@@ -23,6 +24,12 @@ const subNav: Record<string, { to: string; label: string }[]> = {
     { to: "/services/become", label: "Become a freelancer" },
     { to: "/services/dashboard", label: "Freelancer hub" },
   ],
+  dashboard: [
+    { to: "/dashboard", label: "Buyer" },
+    { to: "/dashboard/seller", label: "Seller" },
+    { to: "/dashboard/freelance", label: "Freelance" },
+    { to: "/dashboard/instructor", label: "Instructor" },
+  ],
   courses: [
     { to: "/courses", label: "Browse" },
     { to: "/courses/my", label: "My learning" },
@@ -34,6 +41,7 @@ const subNav: Record<string, { to: string; label: string }[]> = {
 function sectionFor(pathname: string): string {
   if (pathname.startsWith("/services")) return "services";
   if (pathname.startsWith("/courses")) return "courses";
+  if (pathname.startsWith("/dashboard")) return "dashboard";
   return "shop";
 }
 
