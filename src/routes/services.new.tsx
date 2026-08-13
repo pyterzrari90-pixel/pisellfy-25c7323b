@@ -44,10 +44,12 @@ function GigForm() {
   const { user } = useStore();
   const { addGig } = useFreelance();
   const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!user) return;
+    if (!user || saving) return;
     const form = new FormData(event.currentTarget);
     const packages = tiers
       .map((tier) => ({
