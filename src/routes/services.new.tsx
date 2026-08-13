@@ -133,11 +133,18 @@ function GigForm() {
         </fieldset>
       ))}
 
+      {error && (
+        <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
-        className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        disabled={saving}
+        className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
       >
-        Publish gig
+        {saving ? "Publishing…" : "Publish gig"}
       </button>
     </form>
   );
