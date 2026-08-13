@@ -67,7 +67,9 @@ function GigForm() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const gig = addGig({
+    setSaving(true);
+    setError(null);
+    void addGig({
       freelancerUid: user.uid,
       freelancerName: user.username,
       title: String(form.get("title") ?? "").trim().slice(0, 120),
@@ -78,8 +80,12 @@ function GigForm() {
           ? images
           : ["https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=900&q=70"],
       packages,
-    });
-    void navigate({ to: "/services/$id", params: { id: gig.id } });
+    })
+      .then((gig) => navigate({ to: "/services/$id", params: { id: gig.id } }))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err.message : "Could not publish the service."),
+      )
+      .finally(() => setSaving(false));
   }
 
   return (
