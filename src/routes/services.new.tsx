@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 import { AppShell } from "@/components/AppShell";
 import { PiSignInGate } from "@/components/PiSignIn";
@@ -44,10 +44,12 @@ function GigForm() {
   const { user } = useStore();
   const { addGig } = useFreelance();
   const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!user) return;
+    if (!user || saving) return;
     const form = new FormData(event.currentTarget);
     const packages = tiers
       .map((tier) => ({
@@ -65,7 +67,9 @@ function GigForm() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const gig = addGig({
+    setSaving(true);
+    setError(null);
+    void addGig({
       freelancerUid: user.uid,
       freelancerName: user.username,
       title: String(form.get("title") ?? "").trim().slice(0, 120),
@@ -76,8 +80,12 @@ function GigForm() {
           ? images
           : ["https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=900&q=70"],
       packages,
-    });
-    void navigate({ to: "/services/$id", params: { id: gig.id } });
+    })
+      .then((gig) => navigate({ to: "/services/$id", params: { id: gig.id } }))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err.message : "Could not publish the service."),
+      )
+      .finally(() => setSaving(false));
   }
 
   return (
@@ -125,11 +133,18 @@ function GigForm() {
         </fieldset>
       ))}
 
+      {error && (
+        <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
-        className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        disabled={saving}
+        className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
       >
-        Publish gig
+        {saving ? "Publishing…" : "Publish gig"}
       </button>
     </form>
   );
