@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ShoppingCart, Menu, X, Wallet, Loader2, LogOut } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, Wallet, Loader2, LogOut, Gift } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { usePiAuth } from "@/hooks/usePiAuth";
+import { usePoints } from "@/hooks/usePoints";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartCount] = useState(2);
   const { session, piUsername, loading, signIn, signOut } = usePiAuth();
+  const { balance } = usePoints();
 
 
   const navLinks = [
@@ -63,6 +66,21 @@ const Navbar = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
+            {/* Points Badge */}
+            {session && (
+              <Link to="/rewards" className="hidden sm:flex">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 text-sm font-medium hover:bg-primary/10"
+                >
+                  <Gift className="w-4 h-4 text-primary" />
+                  <span className="gradient-text font-bold">{balance}</span>
+                  <span className="text-muted-foreground text-xs">pts</span>
+                </Button>
+              </Link>
+            )}
+
             {/* Cart */}
             <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
               <ShoppingCart className="w-5 h-5" />

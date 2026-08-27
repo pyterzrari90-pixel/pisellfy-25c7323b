@@ -9,6 +9,10 @@ import Subscriptions from "./pages/Subscriptions";
 import CreateSubscription from "./pages/CreateSubscription";
 import MySubscriptions from "./pages/MySubscriptions";
 import SellerSubscriptions from "./pages/SellerSubscriptions";
+import CreateProduct from "./pages/CreateProduct";
+import SellerProducts from "./pages/SellerProducts";
+import EditProduct from "./pages/EditProduct";
+import Rewards from "./pages/Rewards";
 import OAuthConsent from "./pages/OAuthConsent";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +31,10 @@ const App = () => (
             <Route path="/subscriptions/create" element={<CreateSubscription />} />
             <Route path="/subscriptions/mine" element={<MySubscriptions />} />
             <Route path="/subscriptions/dashboard" element={<SellerSubscriptions />} />
+            <Route path="/products/create" element={<CreateProduct />} />
+            <Route path="/products/dashboard" element={<SellerProducts />} />
+            <Route path="/products/edit/:productId" element={<EditProduct />} />
+            <Route path="/rewards" element={<Rewards />} />
             <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
