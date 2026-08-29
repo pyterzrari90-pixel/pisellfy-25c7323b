@@ -32,5 +32,19 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/router.tsx",
+    "src/routeTree.gen.ts",
+    "src/start.ts",
+    "src/server.ts",
+    "src/routes",
+    "src/components/AppShell.tsx",
+    "src/components/Reviews.tsx",
+    "src/components/dashboard",
+    "src/lib/courses",
+    "src/lib/freelance",
+    "src/integrations/supabase/auth-attacher.ts",
+    "src/integrations/supabase/auth-middleware.ts"
   ]
 }
