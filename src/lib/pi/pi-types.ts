@@ -33,10 +33,7 @@ export interface PiSDK {
   ) => void;
 }
 
-declare global {
-  interface Window {
-    Pi?: PiSDK;
-  }
-}
+// The global Window.Pi declaration lives in src/lib/pi.ts (the runtime SDK
+// loader). pi-types.ts exports only the shared type shapes.
 
 export {};

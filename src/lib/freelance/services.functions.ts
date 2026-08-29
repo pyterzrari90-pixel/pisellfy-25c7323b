@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 import type { Database } from "@/integrations/supabase/types";
@@ -8,7 +8,39 @@ import type { Database } from "@/integrations/supabase/types";
  * Freelance services are shared data: they live in the `services` table.
  * Ownership is derived from the Pi access token (this app has no Supabase
  * auth), verified server-side against GET https://api.minepi.com/v2/me.
+ *
+ * Note: the `services` table is not generated in the shared Database type yet.
+ * It is described here locally so this (currently dormant) TanStack Start code
+ * type-checks with the rest of the project.
  */
+
+type ServicesRow = {
+  id: string;
+  owner_id: string;
+  owner_name: string;
+  title: string;
+  description: string;
+  category: string;
+  images: string[];
+  packages: unknown[];
+  status: string;
+  created_at: string;
+};
+
+type ServicesDatabase = Database & {
+  public: {
+    Tables: {
+      services: {
+        Row: ServicesRow;
+        Insert: Partial<ServicesRow>;
+        Update: Partial<ServicesRow>;
+        Relationships: [];
+      };
+    };
+  };
+};
+
+type ServicesClient = SupabaseClient<ServicesDatabase>;
 
 const packageSchema = z.object({
   tier: z.enum(["basic", "standard", "premium"]),
@@ -27,9 +59,9 @@ const gigInput = z.object({
   packages: z.array(packageSchema).min(1).max(3),
 });
 
-function publicClient() {
+function publicClient(): ServicesClient {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  return createClient<ServicesDatabase>(process.env["SUPABASE_URL"]!, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
@@ -40,6 +72,11 @@ function publicClient() {
       },
     },
   });
+}
+
+async function servicesAdmin(): Promise<ServicesClient> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return supabaseAdmin as unknown as ServicesClient;
 }
 
 /** Never trust an owner id sent by the client: resolve it from the Pi token. */
@@ -53,7 +90,7 @@ async function requirePiUser(accessToken: string): Promise<{ uid: string; userna
   return { uid: me.uid, username: me.username ?? "" };
 }
 
-export const listServices = createServerFn({ method: "GET" }).handler(async () => {
+export const listServices = createServerFn({ method: "GET", strict: false }).handler(async () => {
   const { data, error } = await publicClient()
     .from("services")
     .select("*")
@@ -63,12 +100,11 @@ export const listServices = createServerFn({ method: "GET" }).handler(async () =
   return data ?? [];
 });
 
-export const createService = createServerFn({ method: "POST" })
+export const createService = createServerFn({ method: "POST", strict: false })
   .inputValidator((data: unknown) => gigInput.parse(data))
   .handler(async ({ data }) => {
     const user = await requirePiUser(data.accessToken);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
+    const { data: row, error } = await (await servicesAdmin())
       .from("services")
       .insert({
         owner_id: user.uid,
@@ -86,14 +122,13 @@ export const createService = createServerFn({ method: "POST" })
     return row;
   });
 
-export const updateService = createServerFn({ method: "POST" })
+export const updateService = createServerFn({ method: "POST", strict: false })
   .inputValidator((data: unknown) =>
     gigInput.partial({ title: true }).extend({ id: z.string().uuid() }).parse(data),
   )
   .handler(async ({ data }) => {
     const user = await requirePiUser(data.accessToken);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
+    const { data: row, error } = await (await servicesAdmin())
       .from("services")
       .update({
         ...(data.title ? { title: data.title } : {}),
@@ -111,14 +146,13 @@ export const updateService = createServerFn({ method: "POST" })
     return row;
   });
 
-export const deleteService = createServerFn({ method: "POST" })
+export const deleteService = createServerFn({ method: "POST", strict: false })
   .inputValidator((data: unknown) =>
     z.object({ accessToken: z.string().min(10), id: z.string().uuid() }).parse(data),
   )
   .handler(async ({ data }) => {
     const user = await requirePiUser(data.accessToken);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
+    const { data: row, error } = await (await servicesAdmin())
       .from("services")
       .delete()
       .eq("id", data.id)

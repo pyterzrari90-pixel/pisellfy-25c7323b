@@ -27,6 +27,7 @@ export interface ProductInput {
   image_url: string;
   creator_name: string;
   is_featured?: boolean;
+  is_active?: boolean;
 }
 
 export const PRODUCT_CATEGORIES = [

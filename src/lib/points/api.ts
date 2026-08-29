@@ -1,6 +1,6 @@
 // Data access for Points and Referrals system
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import type { Json, Tables } from "@/integrations/supabase/types";
 import {
   POINTS_CONFIG,
   type PointsReason,
@@ -50,7 +50,7 @@ export async function awardPoints(params: {
   amount: number;
   reason: PointsReason;
   description: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Json;
 }): Promise<PointsTransaction> {
   const { userId, amount, reason, description, metadata } = params;
 

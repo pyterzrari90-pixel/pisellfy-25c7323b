@@ -1,6 +1,6 @@
 // Data access for purchases with proper ownership checks
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import type { Json, Tables } from "@/integrations/supabase/types";
 
 export type Purchase = Tables<"purchases">;
 
@@ -80,7 +80,7 @@ export async function createPurchase(purchase: {
   memo: string;
   payment_id: string;
   txid?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Json;
 }): Promise<Purchase> {
   const { data, error } = await supabase
     .from("purchases")
