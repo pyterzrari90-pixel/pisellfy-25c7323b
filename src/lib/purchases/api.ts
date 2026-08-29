@@ -4,12 +4,6 @@ import type { Json, Tables } from "@/integrations/supabase/types";
 
 export type Purchase = Tables<"purchases">;
 
-type PurchaseWithProduct = Purchase & {
-  product?: {
-    seller_id?: string | null;
-  } | null;
-};
-
 /**
  * List purchases made by the current user (buyer perspective).
  * RLS policy ensures only the user's own purchases are returned.
@@ -64,11 +58,11 @@ export async function listSalesForSeller(sellerId: string): Promise<Purchase[]> 
 
   // Filter to only include purchases of seller's products
   // (RLS will handle this, but we double-check for clarity)
-  const sellerPurchases = ((data ?? []) as PurchaseWithProduct[]).filter(
-    (item) => item.product?.seller_id === sellerId
+  const sellerPurchases = (data ?? []).filter(
+    (item: any) => item.product?.seller_id === sellerId
   );
 
-  return sellerPurchases.map((item) => {
+  return sellerPurchases.map((item: any) => {
     const { product, ...purchase } = item;
     return purchase;
   });

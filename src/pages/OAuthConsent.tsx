@@ -5,23 +5,9 @@ import { usePiAuth } from "@/hooks/usePiAuth";
 import { Button } from "@/components/ui/button";
 
 type OAuthNamespace = {
-  getAuthorizationDetails: (id: string) => Promise<{ data: AuthorizationDetails; error: { message: string } | null }>;
-  approveAuthorization: (id: string) => Promise<{ data: AuthorizationDecision; error: { message: string } | null }>;
-  denyAuthorization: (id: string) => Promise<{ data: AuthorizationDecision; error: { message: string } | null }>;
-};
-
-type AuthorizationDetails = {
-  redirect_url?: string;
-  redirect_to?: string;
-  client?: {
-    name?: string;
-  };
-  scopes?: string[];
-};
-
-type AuthorizationDecision = {
-  redirect_url?: string;
-  redirect_to?: string;
+  getAuthorizationDetails: (id: string) => Promise<{ data: any; error: { message: string } | null }>;
+  approveAuthorization: (id: string) => Promise<{ data: any; error: { message: string } | null }>;
+  denyAuthorization: (id: string) => Promise<{ data: any; error: { message: string } | null }>;
 };
 
 const oauth = () => (supabase.auth as unknown as { oauth: OAuthNamespace }).oauth;
@@ -30,7 +16,7 @@ export default function OAuthConsent() {
   const [params] = useSearchParams();
   const authorizationId = params.get("authorization_id") ?? "";
   const { session, loading, signIn, piUsername } = usePiAuth();
-  const [details, setDetails] = useState<AuthorizationDetails | null>(null);
+  const [details, setDetails] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
