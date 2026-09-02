@@ -17,7 +17,7 @@ export type Database = {
       points_transactions: {
         Row: {
           amount: number
-          created_at: string | null
+          created_at: string
           description: string
           id: string
           metadata: Json | null
@@ -26,7 +26,7 @@ export type Database = {
         }
         Insert: {
           amount: number
-          created_at?: string | null
+          created_at?: string
           description: string
           id?: string
           metadata?: Json | null
@@ -35,7 +35,7 @@ export type Database = {
         }
         Update: {
           amount?: number
-          created_at?: string | null
+          created_at?: string
           description?: string
           id?: string
           metadata?: Json | null
@@ -55,54 +55,54 @@ export type Database = {
       products: {
         Row: {
           category: string
-          created_at: string | null
+          created_at: string
           creator_name: string
           description: string | null
           id: string
           image_url: string
-          is_active: boolean | null
-          is_featured: boolean | null
+          is_active: boolean
+          is_featured: boolean
           original_price: number | null
           price: number
           rating: number | null
           reviews_count: number | null
           seller_id: string
           title: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           category: string
-          created_at?: string | null
+          created_at?: string
           creator_name?: string
           description?: string | null
           id?: string
           image_url: string
-          is_active?: boolean | null
-          is_featured?: boolean | null
+          is_active?: boolean
+          is_featured?: boolean
           original_price?: number | null
           price: number
           rating?: number | null
           reviews_count?: number | null
           seller_id: string
           title: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           category?: string
-          created_at?: string | null
+          created_at?: string
           creator_name?: string
           description?: string | null
           id?: string
           image_url?: string
-          is_active?: boolean | null
-          is_featured?: boolean | null
+          is_active?: boolean
+          is_featured?: boolean
           original_price?: number | null
           price?: number
           rating?: number | null
           reviews_count?: number | null
           seller_id?: string
           title?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -186,19 +186,19 @@ export type Database = {
       referral_codes: {
         Row: {
           code: string
-          created_at: string | null
+          created_at: string
           id: string
           user_id: string
         }
         Insert: {
           code: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           user_id: string
         }
         Update: {
           code?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           user_id?: string
         }
@@ -215,30 +215,30 @@ export type Database = {
       referrals: {
         Row: {
           code: string
-          created_at: string | null
+          created_at: string
           id: string
           referred_user_id: string
           referrer_id: string
           status: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           code: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           referred_user_id: string
           referrer_id: string
           status?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           code?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           referred_user_id?: string
           referrer_id?: string
           status?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -456,24 +456,24 @@ export type Database = {
       }
       user_points: {
         Row: {
-          balance: number | null
-          created_at: string | null
+          balance: number
+          created_at: string
           id: string
-          updated_at: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
-          balance?: number | null
-          created_at?: string | null
+          balance?: number
+          created_at?: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
-          balance?: number | null
-          created_at?: string | null
+          balance?: number
+          created_at?: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
