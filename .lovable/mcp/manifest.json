@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "sdk_version": "0.26.1",
+  "sdk_version": "0.26.3",
   "path": "/functions/v1/mcp",
   "auth": {
     "type": "oauth",
-    "issuer": "https://vtgnwztxvfpsyulwpldh.supabase.co/auth/v1",
+    "issuer": "https://sybmptvznuymwghoekmv.supabase.co/auth/v1",
     "accepted_audiences": [
       "authenticated"
     ]

@@ -2,7 +2,157 @@
 // To take ownership, delete this banner line; the plugin then leaves the file alone.
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
+// src/lib/mcp/index.ts
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.26.3";
+
+// src/lib/mcp/tools/get-my-profile.ts
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.26.3";
+
+// src/lib/mcp/supabase.ts
+import { createClient } from "npm:@supabase/supabase-js@^2.93.3";
+function runtimeEnv(name) {
+  const runtime = globalThis;
+  return runtime.Deno?.env?.get?.(name) ?? runtime.process?.env?.[name];
+}
+function configuredEnv(names) {
+  for (const name of names) {
+    const value = runtimeEnv(name)?.trim();
+    if (value) return value;
+  }
+  return void 0;
+}
+function supabaseProjectUrl() {
+  const url = configuredEnv(["SUPABASE_URL", "VITE_SUPABASE_URL"]);
+  if (!url) throw new Error("SUPABASE_URL (or VITE_SUPABASE_URL) is required");
+  return url;
+}
+function supabasePublishableKey() {
+  const direct = configuredEnv([
+    "SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ]);
+  if (direct) return direct;
+  const keyset = runtimeEnv("SUPABASE_PUBLISHABLE_KEYS");
+  if (keyset) {
+    try {
+      const parsed = JSON.parse(keyset);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const keys = parsed;
+        const key = [keys.default, ...Object.values(keys)].find((v) => typeof v === "string" && v.trim().startsWith("sb_publishable_"))?.trim();
+        if (key) return key;
+      }
+    } catch {
+    }
+  }
+  const legacy = configuredEnv(["SUPABASE_ANON_KEY", "VITE_SUPABASE_ANON_KEY"]);
+  if (legacy) return legacy;
+  throw new Error(
+    "SUPABASE_PUBLISHABLE_KEY, SUPABASE_PUBLISHABLE_KEYS, or SUPABASE_ANON_KEY is required"
+  );
+}
+function supabaseForUser(ctx) {
+  const token = ctx.getToken();
+  if (!token) throw new Error("supabaseForUser requires a verified OAuth token");
+  return createClient(supabaseProjectUrl(), supabasePublishableKey(), {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+
+// src/lib/mcp/tools/get-my-profile.ts
+var get_my_profile_default = defineTool({
+  name: "get_my_profile",
+  title: "Get my profile",
+  description: "Return the signed-in user's Pi Network profile (Pi username and Pi UID).",
+  inputSchema: {},
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async (_input, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    }
+    const supabase = supabaseForUser(ctx);
+    const { data, error } = await supabase.from("profiles").select("id, pi_uid, pi_username, created_at").eq("id", ctx.getUserId()).maybeSingle();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (!data) {
+      return { content: [{ type: "text", text: "No profile found for this account." }] };
+    }
+    return {
+      content: [{ type: "text", text: JSON.stringify(data) }],
+      structuredContent: { profile: data }
+    };
+  }
+});
+
+// src/lib/mcp/tools/list-my-purchases.ts
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.26.3";
+import { z } from "npm:zod@^4.4.3";
+var list_my_purchases_default = defineTool2({
+  name: "list_my_purchases",
+  title: "List my purchases",
+  description: "List the signed-in user's Pi digital product purchases, newest first, optionally filtered by status.",
+  inputSchema: {
+    status: z.enum(["pending", "approved", "completed", "cancelled"]).optional().describe("Only return purchases with this status."),
+    limit: z.number().int().min(1).max(100).optional().describe("Maximum number of purchases to return (default 20).")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ status, limit }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    }
+    const supabase = supabaseForUser(ctx);
+    let query = supabase.from("purchases").select("id, payment_id, product_id, product_title, amount, memo, status, txid, created_at").eq("user_id", ctx.getUserId()).order("created_at", { ascending: false }).limit(limit ?? 20);
+    if (status) query = query.eq("status", status);
+    const { data, error } = await query;
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return {
+      content: [{ type: "text", text: JSON.stringify(data ?? []) }],
+      structuredContent: { purchases: data ?? [] }
+    };
+  }
+});
+
+// src/lib/mcp/tools/get-purchase.ts
+import { defineTool as defineTool3, ToolError } from "npm:@lovable.dev/mcp-js@0.26.3";
+import { z as z2 } from "npm:zod@^4.4.3";
+var get_purchase_default = defineTool3({
+  name: "get_purchase",
+  title: "Get purchase",
+  description: "Look up one of the signed-in user's purchases by its Pi payment id, including status and blockchain txid.",
+  inputSchema: {
+    payment_id: z2.string().trim().min(1).describe("The Pi payment identifier of the purchase.")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ payment_id }, ctx) => {
+    if (!ctx.isAuthenticated()) {
+      return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    }
+    const supabase = supabaseForUser(ctx);
+    const { data, error } = await supabase.from("purchases").select(
+      "id, payment_id, product_id, product_title, amount, memo, metadata, status, txid, created_at, updated_at"
+    ).eq("user_id", ctx.getUserId()).eq("payment_id", payment_id).maybeSingle();
+    if (error) throw new ToolError(error.message);
+    if (!data) throw new ToolError(`No purchase found with payment id ${payment_id}.`);
+    return {
+      content: [{ type: "text", text: JSON.stringify(data) }],
+      structuredContent: { purchase: data }
+    };
+  }
+});
+
+// src/lib/mcp/index.ts
+var projectRef = "sybmptvznuymwghoekmv";
+var mcp_default = defineMcp({
+  name: "sellfy-pi",
+  title: "Sellfy.pi",
+  version: "0.1.0",
+  instructions: "Tools for Sellfy.pi, a digital product marketplace for the Pi Network ecosystem. Use `get_my_profile` for the signed-in Pi account, `list_my_purchases` to browse that user's Pi purchases, and `get_purchase` to inspect one purchase by Pi payment id.",
+  auth: auth.oauth.issuer({
+    issuer: `https://${projectRef}.supabase.co/auth/v1`,
+    acceptedAudiences: "authenticated"
+  }),
+  tools: [get_my_profile_default, list_my_purchases_default, get_purchase_default]
+});
+
 // lovable-mcp-supabase-entry.ts
-import mcp from "npm:C:\\Users\\pc\\pisellfy\\src\\lib\\mcp\\index.ts";
 import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.26.3/stacks/supabase";
-Deno.serve(createSupabaseHandler(mcp, { functionName: "mcp" }));
+Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
