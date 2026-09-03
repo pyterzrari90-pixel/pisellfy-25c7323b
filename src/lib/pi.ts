@@ -1,7 +1,7 @@
 // Pi Network SDK loader + init helper.
 // Docs: https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Authentication
 //       https://pi-apps.github.io/pi-sdk-docs/quick-start/genai/Payments
-import { PI_SCOPES } from "@/lib/piConfig";
+import { PI_CLIENT_ID, PI_SANDBOX, PI_SCOPES, PI_SDK_VERSION } from "@/lib/piConfig";
 
 export interface PiAuthResult {
   accessToken: string;
@@ -86,19 +86,26 @@ export function loadPiSdk(): Promise<PiSDK> {
 
 let initPromise: Promise<PiSDK> | null = null;
 
-/** Loads the SDK and awaits Pi.init() fully (it is treated as a Promise). */
+/**
+ * Loads the SDK and awaits Pi.init() fully (it is treated as a Promise).
+ * Called once at app startup, before any other Pi SDK call.
+ */
 export function initPi(): Promise<PiSDK> {
   if (initPromise) return initPromise;
 
   initPromise = (async () => {
     const Pi = await loadPiSdk();
-    const sandbox =
-      typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" || window.location.hostname.endsWith(".lovable.app"));
+    if (!PI_CLIENT_ID) {
+      console.warn("[pi] VITE_PI_CLIENT_ID is missing — add it to your environment variables.");
+    }
+    // Mainnet: real payments, sandbox disabled.
     // Pi.init may return a Promise - await it fully before authenticating or paying.
-    await Promise.resolve(Pi.init({ version: "2.0", sandbox }));
+    await Promise.resolve(Pi.init({ version: PI_SDK_VERSION, sandbox: PI_SANDBOX }));
     return Pi;
-  })();
+  })().catch((error: unknown) => {
+    initPromise = null;
+    throw error;
+  });
 
   return initPromise;
 }

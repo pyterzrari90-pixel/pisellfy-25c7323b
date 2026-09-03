@@ -16,10 +16,14 @@ export type PiEnvironment = "mainnet";
 /** Active Pi environment. Always mainnet. */
 export const PI_ENVIRONMENT: PiEnvironment = "mainnet";
 
-/** Mainnet oAuth Client ID (public value, safe in the client bundle). */
+/**
+ * Mainnet oAuth Client ID (public value, safe in the client bundle).
+ * Loaded from environment variables only — never hardcoded.
+ */
 export const PI_CLIENT_ID_MAINNET =
+  (import.meta.env['VITE_PI_CLIENT_ID'] as string | undefined) ??
   (import.meta.env['VITE_PI_CLIENT_ID_MAINNET'] as string | undefined) ??
-  "ScGmmvjKDYywIvAtSqX-XJcGskGotJm2tt22HP_S8Ss";
+  "";
 
 /** Client ID actually used by the app. */
 export const PI_CLIENT_ID = PI_CLIENT_ID_MAINNET;
