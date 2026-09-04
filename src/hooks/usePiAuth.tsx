@@ -60,14 +60,22 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: { accessToken: auth.accessToken },
       });
       if (fnError) throw new Error(fnError.message);
-      if (!data?.token_hash || !data?.email) throw new Error("Backend did not return a session");
+      if (!data?.token_hash) throw new Error("Backend did not return a session");
 
+      // Supabase n'accepte QUE token_hash + type ici.
       const { error: otpError } = await supabase.auth.verifyOtp({
-        email: data.email,
         token_hash: data.token_hash,
         type: "email",
       });
       if (otpError) throw otpError;
+
+      // Les infos Pi sont stockées après la vérification, jamais dans verifyOtp.
+      if (data.pi_uid || data.pi_username) {
+        const { error: updErr } = await supabase.auth.updateUser({
+          data: { pi_uid: data.pi_uid, pi_username: data.pi_username },
+        });
+        if (updErr) console.warn("Could not persist Pi metadata:", updErr.message);
+      }
 
       setPiUsername(data.pi_username ?? auth.user?.username ?? null);
       setPiUid(data.pi_uid ?? auth.user?.uid ?? null);
