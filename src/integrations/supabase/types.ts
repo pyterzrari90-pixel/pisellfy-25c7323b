@@ -118,6 +118,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_seller: boolean
           pi_uid: string
           pi_username: string
           updated_at: string
@@ -125,6 +126,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id: string
+          is_seller?: boolean
           pi_uid: string
           pi_username: string
           updated_at?: string
@@ -132,6 +134,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          is_seller?: boolean
           pi_uid?: string
           pi_username?: string
           updated_at?: string
@@ -259,6 +262,62 @@ export type Database = {
             foreignKeyName: "referrals_referrer_id_fkey"
             columns: ["referrer_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_profiles: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          languages: string[]
+          level: Database["public"]["Enums"]["seller_level"]
+          professional_title: string
+          rating: number
+          reviews_count: number
+          sales_count: number
+          skills: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          level?: Database["public"]["Enums"]["seller_level"]
+          professional_title?: string
+          rating?: number
+          reviews_count?: number
+          sales_count?: number
+          skills?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          level?: Database["public"]["Enums"]["seller_level"]
+          professional_title?: string
+          rating?: number
+          reviews_count?: number
+          sales_count?: number
+          skills?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -495,6 +554,7 @@ export type Database = {
     }
     Enums: {
       billing_interval: "weekly" | "monthly" | "yearly"
+      seller_level: "new" | "level_1" | "level_2" | "top_rated"
       subscription_status:
         | "active"
         | "past_due"
@@ -629,6 +689,7 @@ export const Constants = {
   public: {
     Enums: {
       billing_interval: ["weekly", "monthly", "yearly"],
+      seller_level: ["new", "level_1", "level_2", "top_rated"],
       subscription_status: [
         "active",
         "past_due",
