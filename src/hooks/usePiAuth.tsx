@@ -9,6 +9,7 @@ interface PiAuthContextValue {
   session: Session | null;
   user: User | null;
   piUsername: string | null;
+  piUid: string | null;
   loading: boolean;
   error: string | null;
   signIn: () => Promise<void>;
@@ -20,6 +21,7 @@ const PiAuthContext = createContext<PiAuthContextValue | undefined>(undefined);
 export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [piUsername, setPiUsername] = useState<string | null>(null);
+  const [piUid, setPiUid] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const autoTried = useRef(false);
@@ -30,12 +32,16 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(nextSession);
       const name = nextSession?.user?.user_metadata?.pi_username;
       if (typeof name === "string") setPiUsername(name);
+      const uid = nextSession?.user?.user_metadata?.pi_uid;
+      if (typeof uid === "string") setPiUid(uid);
     });
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       const name = data.session?.user?.user_metadata?.pi_username;
       if (typeof name === "string") setPiUsername(name);
+      const uid = data.session?.user?.user_metadata?.pi_uid;
+      if (typeof uid === "string") setPiUid(uid);
       setLoading(false);
     });
 
@@ -64,6 +70,7 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (otpError) throw otpError;
 
       setPiUsername(data.pi_username ?? auth.user?.username ?? null);
+      setPiUid(data.pi_uid ?? auth.user?.uid ?? null);
       if (!silent) {
         toast({
           title: "Signed in with Pi",
@@ -101,6 +108,7 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
     await supabase.auth.signOut();
     setSession(null);
     setPiUsername(null);
+    setPiUid(null);
   }, []);
 
   // Automatically trigger Pi authentication on app load (silent: no toast noise).
@@ -116,6 +124,7 @@ export const PiAuthProvider = ({ children }: { children: React.ReactNode }) => {
         session,
         user: session?.user ?? null,
         piUsername,
+        piUid,
         loading,
         error,
         signIn,
