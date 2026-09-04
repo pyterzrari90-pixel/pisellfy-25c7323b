@@ -82,14 +82,18 @@ const Navbar = () => {
             )}
 
             {/* Cart */}
-            <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/cart"
+              aria-label="Cart"
+              className="relative p-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full gradient-gold text-primary-foreground text-xs font-bold flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Connect Wallet / Pi Auth Button */}
             {session ? (
