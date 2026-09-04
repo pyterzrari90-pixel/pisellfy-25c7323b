@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { usePiAuth } from "@/hooks/usePiAuth";
 import { usePoints } from "@/hooks/usePoints";
+import { useCart } from "@/lib/cart/store";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cartCount] = useState(2);
+  const { count: cartCount } = useCart();
   const { session, piUsername, loading, signIn, signOut } = usePiAuth();
   const { balance } = usePoints();
 
